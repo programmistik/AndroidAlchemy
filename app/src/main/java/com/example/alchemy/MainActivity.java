@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -24,7 +25,9 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    String[] elements = {"Fire", "Water", "Earth", "Air"};
+
+    ArrayList<String> elements = new ArrayList<>();
+    ArrayList<MyColor> colors = new ArrayList<>();
     ArrayList<Alch> AlchemyList;
 
     @Override
@@ -47,33 +50,29 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout linearLayout = findViewById(R.id.linLayout);
         TextView textView1 = new TextView(this);
         textView1.setOnTouchListener(new MyTouchListener());
-        // textView1.setOnTouchListener(this);
-        // установка фонового цвета
-        textView1.setBackgroundColor(0xffe8eaf6);
-        // установка цвета текста
-        textView1.setTextColor(0xff5c6bc0);
-        // делаем все буквы заглавными
-        textView1.setAllCaps(true);
-        // устанавливаем вравнивание текста по центру
-        textView1.setTextAlignment(TextView.TEXT_ALIGNMENT_CENTER);
-        // устанавливаем текста
-        Spinner spinner = (Spinner) findViewById(R.id.elmSpinner);
 
-        textView1.setText(spinner.getSelectedItem().toString());
-        // установка шрифта
+        textView1.setAllCaps(true);
+        textView1.setTextAlignment(TextView.TEXT_ALIGNMENT_CENTER);
+
+        Spinner spinner = (Spinner) findViewById(R.id.elmSpinner);
+        String txt = spinner.getSelectedItem().toString();
+        textView1.setText(txt);
+
+        MyColor col = findColorByName(txt);
+
+        textView1.setBackgroundColor(col.getBgColor());
+        textView1.setTextColor(col.getTextColor());
         textView1.setTypeface(Typeface.create("casual", Typeface.NORMAL));
-        // устанавливаем высоту текста
+
         textView1.setTextSize(25);
         textView1.setId(view.generateViewId());
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(250, 90);
-        // установка внешних отступов
         layoutParams.setMargins(20,20,20,20);
-        // устанавливаем размеры
         textView1.setLayoutParams(layoutParams);
 
         linearLayout.addView(textView1);
-        // setContentView(linearLayout);
+
     }
 
     private final class MyTouchListener implements View.OnTouchListener  {
@@ -105,26 +104,21 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onDrag(View v, DragEvent event) {
 
-            // Handles each of the expected events
+
             switch (event.getAction()) {
 
-                //signal for the start of a drag and drop operation.
                 case DragEvent.ACTION_DRAG_STARTED:
                     // do nothing
                     break;
 
-                //the drag point has entered the bounding box of the View
                 case DragEvent.ACTION_DRAG_ENTERED:
-
-
                     v.invalidate();
                     return true;
-                //the user has moved the drag shadow outside the bounding box of the View
+
                 case DragEvent.ACTION_DRAG_EXITED:
-                    v.setBackgroundDrawable(normalShape);   //change the shape of the view back to normal
+                    v.setBackgroundDrawable(normalShape);
                     break;
 
-                //drag shadow has been released,the drag point is within the bounding box of the View
                 case DragEvent.ACTION_DROP:
                     int x = (int) event.getX();
                     int y = (int) event.getY();
@@ -144,7 +138,6 @@ public class MainActivity extends AppCompatActivity {
 
                         if (nextChild instanceof TextView) {
                             TextView textView = (TextView) nextChild;
-                            // do what you want with textView
 
                             int top = nextChild.getTop();
                             int bottom = nextChild.getBottom();
@@ -159,6 +152,9 @@ public class MainActivity extends AppCompatActivity {
                                 {
                                     textView.setText(Alchemy);
                                     tv.setVisibility(View.GONE);
+
+                                   elements.add(Alchemy);
+
                                     isAlchemy = true;
                                 }
                             }
@@ -172,8 +168,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                     break;
 
-
-                //the drag and drop operation has concluded.
                 case DragEvent.ACTION_DRAG_ENDED:
                     v.setBackground(normalShape);   //go back to normal shape
 
@@ -195,7 +189,33 @@ public class MainActivity extends AppCompatActivity {
         return "NoResult";
     }
 
+    public MyColor findColorByName(String Name){
+        for (MyColor itm: colors) {
+            if(itm.getName().equals(Name)){
+                return itm;
+            }
+        }
+        return null;
+    }
+
     public void Create(){
+        elements.add("Fire");
+        elements.add("Water");
+        elements.add("Earth");
+        elements.add("Air");
+
+        colors.add(new MyColor("Water", Color.BLUE, Color.rgb(0,255,255)));
+        colors.add(new MyColor("Fire", Color.RED, Color.rgb(252,233,140)));
+        colors.add(new MyColor("Earth", Color.DKGRAY, Color.rgb(218,218,215)));
+        colors.add(new MyColor("Air", Color.BLUE, Color.rgb(156,218,250)));
+
+        colors.add(new MyColor("Steam", Color.GRAY, Color.rgb(156,218,250))); // пар
+        colors.add(new MyColor("Alcohol", Color.BLUE, Color.rgb(204,153,255)));
+        colors.add(new MyColor("Lake", Color.BLUE, Color.rgb(0,153,153)));
+        colors.add(new MyColor("Swamp", Color.DKGRAY, Color.rgb(153,153,0))); // болото
+        colors.add(new MyColor("Energy", Color.RED, Color.rgb(255,204,230)));
+        colors.add(new MyColor("Dust", Color.GRAY, Color.rgb(224,224,224)));
+        colors.add(new MyColor("Lava", Color.BLACK, Color.rgb(255,204,153)));
 
         AlchemyList = new ArrayList<>();
 

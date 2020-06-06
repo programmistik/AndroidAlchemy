@@ -13,15 +13,7 @@ public class Alch {
         this.Result = Result;
     }
 
-    /*public String getComp1(){
-        return Comp1;
-    }
-    public String getComp2(){
-        return Comp2;
-    }
-    public String getResult(){
-        return Result;
-    }*/
+
 
     public String getResult(String comp1, String comp2){
         if (this.Comp1.equals(comp1) & this.Comp2.equals(comp2))
